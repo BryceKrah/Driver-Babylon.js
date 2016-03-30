@@ -14,6 +14,7 @@
   - As a user I should be able to start and stop the car.
   - As a user if I crash into a wall, I should be able to go in reverse.
   - As a user I should be presented with a clear path as to where I am able to drive.
+  - As a user I should know how fast I am going.
   - As a user I should not be able to drive through walls.
   - As a user I should be able to drive the car off the map.
   - As a user, if I drive off the map the game should end and an option for restart should appear.
@@ -28,3 +29,8 @@
 
 
 # Wireframes
+ - Some inspirational pictures of what I hope it looks like.
+
+![Dirt Mountains](public/msc_img/wireframe2.jpg)
+![Racing Dirt Road](public/msc_img/wireframe3.jpg)
+![Racing Dirt Road 2](public/msc_img/wireframe1.jpg)
