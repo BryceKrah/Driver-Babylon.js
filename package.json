@@ -1,0 +1,23 @@
+{
+  "name": "driver-babylonjs",
+  "version": "1.0.0",
+  "description": "3D driving simulation",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BryceKrah/Driver-Babylon.js.git"
+  },
+  "author": "Bryce Krah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BryceKrah/Driver-Babylon.js/issues"
+  },
+  "homepage": "https://github.com/BryceKrah/Driver-Babylon.js#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "path": "^0.12.7"
+  }
+}
