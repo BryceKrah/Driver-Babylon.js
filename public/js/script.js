@@ -5,19 +5,19 @@ window.onload = function(){
 
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
-  // var camera = new BABYLON.ArcRotateCamera("arcCamera", 0,10, -10, new BABYLON.Vector3(0,1,0), scene);
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
-    camera.applyGravity = true;
-    camera.checkCollisions = true;
-    // This attaches the camera to the canvas
-    camera.attachControl(canvas, true);
-
+  var camera = new BABYLON.ArcRotateCamera("cam1", 5, 2, -25, new BABYLON.Vector3(0,1,0), scene);
+    // camera.applyGravity = true;
+    // camera.checkCollisions = true;
   var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
-  var ground = BABYLON.Mesh.CreateGround("ground", 250,250, 2, scene);
+  var ground = BABYLON.Mesh.CreateGround("ground", 500,500, 2, scene);
   ground.checkCollisions = true;
 
+
+
+
+/// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
+/// reference for using math.cos and math.sin
 
 BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
   var m = mesh[0];
@@ -25,15 +25,26 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   m.position.x = 0
 
   scene.registerBeforeRender(function(){
-    camera.target = m.position
+    camera.target = m
 
     if (accelerate){
       m.position.z += 0.5
+      m.position.z -= Math.cos(m.rotation.y);
+      m.position.x -= Math.sin(m.rotation.y);
     }
     if (breaking) {
       m.position.z -= 0.5
     }
-
+    if (accelerate && left){
+      m.rotation.y -= 0.02;
+      m.position.z -= Math.cos(m.rotation.y);
+      m.position.x -= Math.sin(m.rotation.y);
+    }
+    if (accelerate && right) {
+      m.rotation.y += 0.02;
+      m.position.z -= Math.cos(m.rotation.y);
+      m.position.x -= Math.sin(m.rotation.y);
+    }
   })
 })
 
