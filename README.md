@@ -34,3 +34,4 @@
 ![Dirt Mountains](public/msc_img/wireframe2.jpg)
 ![Racing Dirt Road](public/msc_img/wireframe3.jpg)
 ![Racing Dirt Road 2](public/msc_img/wireframe1.jpg)
+![Car](public/msc_img/wirefram4.jpg)
