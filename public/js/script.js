@@ -3,51 +3,99 @@ window.onload = function(){
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
 
-  var createScene = function(){
-    var scene = new BABYLON.Scene(engine);
-
-    // creates a FreeCamera (first person), and sets position to (x:0, y:5, z:-10)
-    var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0,5,-10), scene);
-    camera.checkCollisions = true;
-
-    // target the camera to scene origin
+var createScene = function() {
+  var scene = new BABYLON.Scene(engine);
+  // var camera = new BABYLON.ArcRotateCamera("arcCamera", 0,10, -10, new BABYLON.Vector3(0,1,0), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
+    camera.applyGravity = true;
+    camera.checkCollisions = true;
+    // This attaches the camera to the canvas
+    camera.attachControl(canvas, true);
 
-    // attach the camera to the canvas
-    camera.attachControl(canvas, false);
+  var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
-    // create a basic light, aiming 0,1,0 - meaning, to the sky
-    var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
-
-
-    // takes in 5 paramaters - (name for mesh, folder or path, filename, scene to render to, and callback)
-    BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (meshes) {
-      var m = meshes[0];
-      // m.scaling = new BABYLON.Vector3(0.5,0.5,0.5);
-      camera.target = m;
-      console.log(m);
-    }); // end of SceneLoader
-
-  // creates built in "ground" shape - takes 5 params (name, width, depth, subdivisions, scene)
-  var ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 1, scene);
+  var ground = BABYLON.Mesh.CreateGround("ground", 250,250, 2, scene);
   ground.checkCollisions = true;
+
+
+BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
+  var m = mesh[0];
+  console.log(m);
+  m.position.x = 0
+
+  scene.registerBeforeRender(function(){
+    camera.target = m.position
+
+    if (accelerate){
+      m.position.z += 0.5
+    }
+    if (breaking) {
+      m.position.z -= 0.5
+    }
+
+  })
+})
+
+// keys
+var left = false;
+var right = false;
+var accelerate = false;
+var breaking = false;
+
+// left arrow = 37
+// up arrow = 38
+// right arrow = 39
+// down arrow = 40
+
+window.addEventListener("keydown", function(event){
+  if (!scene){
+    return;
+  }
+  if (event.keyCode === 37) {
+    left = true;
+    right = false;
+  }
+  if (event.keyCode === 39) {
+    left = false;
+    right = true;
+  }
+  if (event.keyCode === 38) {
+    accelerate = true;
+    breaking = false;
+  }
+  if (event.keyCode === 40) {
+    accelerate = false;
+    breaking = true;
+  }
+}); // end of keydown event listener
+
+window.addEventListener("keyup", function(event){
+  if (event.keyCode == 37 || event.keyCode === 39){
+      left = false;
+      right = false;
+  }
+  if (event.keyCode == 38 || event.keyCode === 40){
+      accelerate = false;
+      breaking = false;
+  }
+
+})
 
   // returns created scene
   return scene;
-  } // end of createScene
+} // end of createScene
 
-  // call the createScene function
-  var scene = createScene();
+// call the createScene function
+var scene = createScene();
 
-  // run the render loop
-  engine.runRenderLoop(function () {
-    scene.render()
-  });
-
-  // the canvas/window resize event handler
-  window.addEventListener('resize', function(){
-    engine.resize();
-  });
-
+// run the render loop
+engine.runRenderLoop(function () {
+  scene.render();
+});
+//the canvas/window resize event handler
+window.addEventListener('resize', function(){
+  engine.resize();
+});
 
 } // end of window.onload
