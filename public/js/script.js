@@ -5,10 +5,9 @@ window.onload = function(){
 
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
-  var camera = new BABYLON.ArcRotateCamera("cam1", 5, 2, -15, new BABYLON.Vector3(0,1,0), scene);
+  var camera = new BABYLON.ArcRotateCamera("cam1", -1.5, 1.8479, -35, new BABYLON.Vector3(0,1,0), scene);
     // camera.applyGravity = true;
     // camera.checkCollisions = true;
-
 
   // free camera for looking around entire area, not attached to mesh
   // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
@@ -22,7 +21,7 @@ var createScene = function() {
 
 
     // Skybox
-  var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+  var skybox = BABYLON.Mesh.CreateBox("skyBox", 2000.0, scene);
   var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
   skyboxMaterial.backFaceCulling = false;
   skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("../skybox/skybox", scene);
@@ -32,26 +31,16 @@ var createScene = function() {
   skybox.material = skyboxMaterial;
 
 
+var grass = BABYLON.Mesh.CreateGround("grass", 2000,2000, 0, scene, false);
+var grassMaterial = new BABYLON.StandardMaterial("grassMat", scene);
+grassMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/water.jpg", scene);
+grassMaterial.diffuseTexture.uScale = 25;
+grassMaterial.diffuseTexture.vScale = 25;
+grass.material = grassMaterial;
 
 
-  // var ground = BABYLON.Mesh.CreateGround("ground", 500,500, 2, scene);
-  // ground.checkCollisions = true;
 
-  // var groundMaterial = new BABYLON.StandardMaterial("groundMat", scene);
-  // groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
-  // groundMaterial.diffuseTexture.uScale = 1000;
-  // groundMaterial.diffuseTexture.vScale = 1000;
-  // ground.material = groundMaterial;
-//////////////////////////////////////////////////
-  // var extraGround = BABYLON.Mesh.CreateGround("extraGround", 1000, 1000, 1, scene, false);
-  // var extraGroundMaterial = new BABYLON.StandardMaterial("extraGround", scene);
-  // extraGroundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
-  // extraGroundMaterial.diffuseTexture.uScale = 60;
-  // extraGroundMaterial.diffuseTexture.vScale = 60;
-  // extraGround.position.y = -2.05;
-  // extraGround.material = extraGroundMaterial;
-
-var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, -25, 25, scene, false);
+var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, 10.09, 68, scene, false);
 var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
 groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
 groundMaterial.diffuseTexture.uScale = 6;
@@ -60,41 +49,67 @@ groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
 ground.position.y = -10.05;
 ground.material = groundMaterial;
 ////////////////////////////////////////////
-
-
-
-
-
-
 /// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
 /// reference for using math.cos and math.sin
 
+
+// imports car mesh from .babylon file, created in Blender
+// takes 5 params
 BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
   var m = mesh[0];
   console.log(m);
   m.position.x = 210;
   m.position.z = 220;
-
+  camera.target = m
+  // things to update before each render
   scene.registerBeforeRender(function(){
-    camera.target = m
+    // Ray constructor takes 3 params (origin, direction, and length)
+    // origin is type vector
+    // direction is type vector, describes directino of Ray
+    // length is optional param
+    var ray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, ground.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
+
+    // creates a new 4 by 4 matrix
+    var worldInverse = new BABYLON.Matrix();
+
+    // inverts matrix and puts it into another matrix
+    ground.getWorldMatrix().invertToRef(worldInverse);
+
+    // Ray.Transform takes 2 params (ray, matrix)
+    // the given ray
+    // the given matrix to apply
+    ray = BABYLON.Ray.Transform(ray, worldInverse);
+
+    // setting var for where the ground will intersect with the ray being cast by car
+    var pickInfo = ground.intersects(ray);
+
+    // hit is boolean that returns true if touched
+    if (pickInfo.hit) {
+      m.position.y = pickInfo.pickedPoint.y + 1;
+    }
 
     if (accelerate){
-      m.position.z += 0.5
-      m.position.z -= Math.cos(m.rotation.y);
-      m.position.x -= Math.sin(m.rotation.y);
+      m.position.z -= Math.cos(m.rotation.y) * 2.2;
+      m.position.x -= Math.sin(m.rotation.y) * 2.2;
     }
+
     if (breaking) {
-      m.position.z -= 0.5
+      m.position.z += Math.cos(m.rotation.y);
+      m.position.x += Math.sin(m.rotation.y);
     }
     if (accelerate && left){
       m.rotation.y -= 0.02;
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
+      scene.activeCamera.alpha += 0.02;
+      // pans camera to stay behind car while turning
     }
     if (accelerate && right) {
       m.rotation.y += 0.02;
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
+      scene.activeCamera.alpha -= 0.02;
+      // pans camera to stay behind car while turning
     }
   })
 })
