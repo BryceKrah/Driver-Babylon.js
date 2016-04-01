@@ -6,6 +6,7 @@
   - Node.js
   - Express.js
   - Blender
+  - Adobe Photoshop
 
 # User Stories
   - As a user when I visit the homepage I should have the option of two driving modes, competitive and free ride.

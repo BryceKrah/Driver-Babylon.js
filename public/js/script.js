@@ -5,13 +5,63 @@ window.onload = function(){
 
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
-  var camera = new BABYLON.ArcRotateCamera("cam1", 5, 2, -25, new BABYLON.Vector3(0,1,0), scene);
+  var camera = new BABYLON.ArcRotateCamera("cam1", 5, 2, -15, new BABYLON.Vector3(0,1,0), scene);
     // camera.applyGravity = true;
     // camera.checkCollisions = true;
+
+
+  // free camera for looking around entire area, not attached to mesh
+  // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+  // // This targets the camera to scene origin
+  // camera.setTarget(BABYLON.Vector3.Zero());
+  // // This attaches the camera to the canvas
+  // camera.attachControl(canvas, true);
+
+
   var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
-  var ground = BABYLON.Mesh.CreateGround("ground", 500,500, 2, scene);
-  ground.checkCollisions = true;
+
+    // Skybox
+  var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+  var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+  skyboxMaterial.backFaceCulling = false;
+  skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("../skybox/skybox", scene);
+  skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+  skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+  skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+  skybox.material = skyboxMaterial;
+
+
+
+
+  // var ground = BABYLON.Mesh.CreateGround("ground", 500,500, 2, scene);
+  // ground.checkCollisions = true;
+
+  // var groundMaterial = new BABYLON.StandardMaterial("groundMat", scene);
+  // groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
+  // groundMaterial.diffuseTexture.uScale = 1000;
+  // groundMaterial.diffuseTexture.vScale = 1000;
+  // ground.material = groundMaterial;
+//////////////////////////////////////////////////
+  // var extraGround = BABYLON.Mesh.CreateGround("extraGround", 1000, 1000, 1, scene, false);
+  // var extraGroundMaterial = new BABYLON.StandardMaterial("extraGround", scene);
+  // extraGroundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
+  // extraGroundMaterial.diffuseTexture.uScale = 60;
+  // extraGroundMaterial.diffuseTexture.vScale = 60;
+  // extraGround.position.y = -2.05;
+  // extraGround.material = extraGroundMaterial;
+
+var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, -25, 25, scene, false);
+var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
+groundMaterial.diffuseTexture.uScale = 6;
+groundMaterial.diffuseTexture.vScale = 6;
+groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+ground.position.y = -10.05;
+ground.material = groundMaterial;
+////////////////////////////////////////////
+
+
 
 
 
@@ -22,7 +72,8 @@ var createScene = function() {
 BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
   var m = mesh[0];
   console.log(m);
-  m.position.x = 0
+  m.position.x = 210;
+  m.position.z = 220;
 
   scene.registerBeforeRender(function(){
     camera.target = m
