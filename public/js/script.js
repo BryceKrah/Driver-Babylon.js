@@ -5,6 +5,7 @@ window.onload = function(){
 
   var game = {
     score: 0,
+    checkpointNumber: 0
   };
 
 
@@ -60,13 +61,22 @@ ground.material = groundMaterial;
 /// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
 /// reference for using math.cos and math.sin
 
-var fountain = BABYLON.Mesh.CreateBox("foutain", 2.0, scene);
-fountain.position.x = 200;
-fountain.position.y = 0;
-fountain.position.z = 200;
+
+
+var marker = BABYLON.Mesh.CreateBox("marker", 7.0, scene);
+marker.position.x = 245;
+marker.position.y = 10;
+marker.position.z = 195;
+
+
+
+var checkpoint = BABYLON.Mesh.CreateBox("checkpoint", 2.0, scene);
+checkpoint.position.x = 200;
+checkpoint.position.y = 0;
+checkpoint.position.z = 200;
 var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
 particleSystem.particleTexture = new BABYLON.Texture("../texture_imgs/Flare.png", scene);
-particleSystem.emitter = fountain;
+particleSystem.emitter = checkpoint;
 particleSystem.minEmitBox = new BABYLON.Vector3(-30, 0, 0); // Starting all from
 particleSystem.maxEmitBox = new BABYLON.Vector3(30, 0, 0); // To...
 // Size of each particle (random between...
@@ -79,6 +89,7 @@ particleSystem.maxLifeTime = 2.5;
 
 // Emission rate
 particleSystem.emitRate = 1500;
+
 // Angular speed, in radians
 particleSystem.minAngularSpeed = 0;
 particleSystem.maxAngularSpeed = Math.PI;
@@ -103,226 +114,226 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
 
   var checkpointReached = function(){
     if (BABYLON.Vector3.Distance(m.position, particleSystem.emitter.position) < 20) {
-      switch (game.score) {
+
+      switch (game.checkpointNumber) {
+
         case 0:
-        // do the stuff
-        fountain.position.x = 267;
-        fountain.position.y = 0;
-        fountain.position.z = -5;
+        checkpoint.position.x = 267;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -5;
         game.score += 1;
+        game.checkpointNumber += 1;
         break;
 
         case 1:
-        // do the stuff
-        fountain.position.x = 267;
-        fountain.position.y = 0;
-        fountain.position.z = -5;
+        checkpoint.position.x = 267;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -5;
         game.score += 1;
+        game.checkpointNumber += 1;
         break;
 
         case 2:
-        // do the stuff
-        fountain.position.x = 125;
-        fountain.position.y = 0;
-        fountain.position.z = -159;
+        checkpoint.rotation.y = 1
+        checkpoint.position.x = 125;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -159;
         game.score += 1;
-        console.log("case 2:", fountain.rotation);
+        game.checkpointNumber += 1;
         break;
 
         case 3:
-        // do the stuff
-        fountain.position.x = -87;
-        fountain.position.y = 0;
-        fountain.position.z = -218;
+        checkpoint.rotation.y = 2
+        checkpoint.position.x = -87;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -218;
         game.score += 1;
-        console.log("case 3:", fountain.rotation);
+        game.checkpointNumber += 1;
         break;
 
         case 4:
-        // do the stuff
-        fountain.position.x = -323;
-        fountain.position.y = 0;
-        fountain.position.z = -110;
+        checkpoint.position.x = -323;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -110;
         game.score += 1;
-        console.log("case 4:", fountain.rotation);
+        game.checkpointNumber += 1;
+        console.log("case4");
         break;
 
         case 5:
-        // do the stuff
-        fountain.position.x = -321;
-        fountain.position.y = 0;
-        fountain.position.z = 106;
+        checkpoint.rotation.y = 3
+        checkpoint.position.x = -321;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 106;
         game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case5");
         break;
 
         case 6:
-        // do the stuff
-        fountain.position.x = -262;
-        fountain.position.y = 0;
-        fountain.position.z = 283;
+        checkpoint.position.x = -262;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 283;
         game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case6");
         break;
 
         case 7:
-        // do the stuff
-        fountain.position.x = -79;
-        fountain.position.y = 0;
-        fountain.position.z = 345;
+        checkpoint.rotation.y = 5
+        checkpoint.position.x = -79;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 345;
         game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case7");
         break;
 
         case 8:
-        // do the stuff
-        fountain.position.x = 112;
-        fountain.position.y = 0;
-        fountain.position.z = 326;
+        checkpoint.rotation.y = 5
+        checkpoint.position.x = 112;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 326;
         game.score += 1;
-        console.log("case 8:", fountain.rotation);
+        game.checkpointNumber += 1;
+        console.log("case8");
         break;
 
         case 9:
-        // do the stuff
-        fountain.position.x = 270;
-        fountain.position.y = 0;
-        fountain.position.z = 231;
+        checkpoint.position.x = 270;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 231;
         game.score += 1;
-        console.log("case 9:", fountain.rotation);
+        game.checkpointNumber += 1;
+        console.log("case9");
         break;
 
         case 10:
-        // do the stuff
-        fountain.position.x = 289;
-        fountain.position.y = 0;
-        fountain.position.z = 85;
-        game.score += 1
-        console.log("case 10:", fountain.rotation);
-
+        // NEEDS ROTATION
+        checkpoint.position.x = 289;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 85;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case10");
         break;
 
         case 11:
-        // do the stuff
-        fountain.position.x = 138;
-        fountain.position.y = 0;
-        fountain.position.z = -111;
-        game.score += 1
-        console.log("case 11:", fountain.rotation);
-
+        checkpoint.position.x = 138;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -111;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case11");
         break;
 
         case 12:
-        // do the stuff
-        fountain.position.x = 25;
-        fountain.position.y = 0;
-        fountain.position.z = -274;
+        checkpoint.position.x = 25;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -274;
         game.score += 1;
-        console.log("case 12:", fountain.rotation);
-
+        game.checkpointNumber += 1;
+        console.log("case12");
         break;
 
         case 13:
-        // do the stuff
-        fountain.position.x = 129;
-        fountain.position.y = 0;
-        fountain.position.z = -328;
+        checkpoint.position.x = 129;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -328;
         game.score += 1;
-        console.log("case 13:", fountain.rotation);
-
+        game.checkpointNumber += 1;
+        console.log("case13");
         break;
 
         case 14:
-        // do the stuff
-        fountain.position.x = 298;
-        fountain.position.y = 0;
-        fountain.position.z = -321;
+        checkpoint.position.x = 298;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -321;
         game.score += 1;
-        console.log("case 14:", fountain.rotation);
+        game.checkpointNumber += 1;
+        console.log("case14");
         break;
 
         case 15:
-        // do the stuff
-        fountain.position.x = 321;
-        fountain.position.y = 0;
-        fountain.position.z = -119;
-        game.score += 1
-        console.log("case 15:", fountain.rotation);
-
+        checkpoint.position.x = 321;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -119;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case15");
         break;
 
         case 16:
-        // do the stuff
-        fountain.position.x = 100;
-        fountain.position.y = 0;
-        fountain.position.z = -120;
-        game.score += 1
-        console.log("case 16: ", fountain.rotation);
-
+        checkpoint.position.x = 100;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -120;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case16");
         break;
 
         case 17:
-        console.log(m.position.x, m.position.z);
-        // do the stuff
-        fountain.position.x = 12;
-        fountain.position.y = 0;
-        fountain.position.z = -224;
-        game.score += 1
-        console.log("case 17");
+        checkpoint.position.x = 12;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -224;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case17");
         break;
 
         case 18:
-        // do the stuff
-        console.log(m.position.x, m.position.z);
-        fountain.position.x = -186;
-        fountain.position.y = 0;
-        fountain.position.z = -230;
-        game.score += 1
-        console.log("case 18:", fountain.rotation);
-
+        checkpoint.position.x = -186;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -230;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case18");
         break;
 
         case 19:
-        // do the stuff
-        fountain.position.x = -301;
-        fountain.position.y = 0;
-        fountain.position.z = -146;
-        game.score += 1
-        console.log("case 19:", fountain.rotation);
-
+        checkpoint.position.x = -301;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = -146;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case19");
         break;
 
         case 20:
-        // do the stuff
-        fountain.position.x = -343;
-        fountain.position.y = 0;
-        fountain.position.z = 63;
-        game.score += 1
-        console.log("case 20:", fountain.rotation);
-
+        checkpoint.position.x = -343;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 63;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case20");
         break;
 
         case 21:
-        // do the stuff
-        fountain.position.x = -290;
-        fountain.position.y = 0;
-        fountain.position.z = 250;
-        game.score += 1
-        console.log("case 21:", fountain.rotation);
-
+        checkpoint.position.x = -290;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 250;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case21");
+        console.log("score: ",game.score);
         break;
 
         case 22:
-        // do the stuff
-        fountain.position.x = -87;
-        fountain.position.y = 0;
-        fountain.position.z = 345;
-        game.score += 1
+        checkpoint.position.x = -87;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 345;
+        game.score += 1;
+        game.checkpointNumber += 1;
+        console.log("case22");
         break;
 
         case 23:
-        // do the stuff
-        fountain.position.x = 161;
-        fountain.position.y = 0;
-        fountain.position.z = 318;
+        checkpoint.position.x = 161;
+        checkpoint.position.y = 0;
+        checkpoint.position.z = 318;
         game.score += 1
+        game.checkpointNumber = 0;
+        console.log("case23");
         break;
 
         default:
@@ -333,17 +344,13 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   }
 
 
-
-
-
-
   // things to update before each render
   scene.registerBeforeRender(function(){
     checkpointReached()
 
     // Ray constructor takes 3 params (origin, direction, and length)
     // origin is type vector
-    // direction is type vector, describes directino of Ray
+    // direction is type vector, describes direction of Ray
     // length is optional param
     var ray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, ground.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
 
