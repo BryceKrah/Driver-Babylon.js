@@ -382,14 +382,14 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
       m.position.z += Math.cos(m.rotation.y);
       m.position.x += Math.sin(m.rotation.y);
     }
-    if (accelerate && left){
+    if (left){
       m.rotation.y -= 0.02;
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
       scene.activeCamera.alpha += 0.02;
       // pans camera to stay behind car while turning
     }
-    if (accelerate && right) {
+    if (right) {
       m.rotation.y += 0.02;
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
