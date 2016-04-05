@@ -4,12 +4,13 @@ var app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.get('/', function(req,res){
-  res.sendFile('./views/index.html')
+  res.sendFile(path.join(__dirname, '/views', 'index.html'))
 })
 
 app.get('/level_one', function(req,res){
-  res.sendFile('./views/level_one.html')
+  res.sendFile(path.join(__dirname, '/views', 'level_one.html'))
 })
 
 
