@@ -32,6 +32,6 @@ nav {
 .container {
   display: flex;
   justify-content: space-around;
-  margin: 2px;
+  margin: 4px;
   font-size: 20px;
 }

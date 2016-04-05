@@ -52,7 +52,6 @@ var checkLaps = function(){
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
   var camera = new BABYLON.ArcRotateCamera("cam1", -1.5, 1.7179, -40, new BABYLON.Vector3(0,1,0), scene);
-    // camera.applyGravity = true;
 
     // free camera for looking around entire area, not attached to mesh
     // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
@@ -66,7 +65,6 @@ var createScene = function() {
 
   var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
-
     // Skybox
   var skybox = BABYLON.Mesh.CreateBox("skyBox", 2000.0, scene);
   var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
@@ -78,12 +76,12 @@ var createScene = function() {
   skybox.material = skyboxMaterial;
 
   var water = BABYLON.Mesh.CreateGround("water", 2000,2000, 0, scene, false);
-  var waterMaterial = new BABYLON.StandardMaterial("waterMat", scene);
+  var waterMaterial = new BABYLON.StandardMaterial("water", scene, new BABYLON.Vector2(512, 512))
   waterMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/water.jpg", scene);
   waterMaterial.diffuseTexture.uScale = 25;
   waterMaterial.diffuseTexture.vScale = 25;
+  waterMaterial.bumpTexture = new BABYLON.Texture("texture_imgs/waterNormal.png", scene);
   water.material = waterMaterial;
-
 
 
   var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, 10.09, 68, scene, false);
@@ -100,12 +98,15 @@ var createScene = function() {
 /// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
 /// reference for using math.cos and math.sin
 
-
-var marker = BABYLON.Mesh.CreateBox("marker", 10.0, scene);
-marker.material = new BABYLON.StandardMaterial("markeerr", scene)
-marker.position.x = 245;
-marker.position.y = 10;
-marker.position.z = 195;
+var boulder = BABYLON.Mesh.CreateSphere("sphere1", 16, 14, scene);
+var boulderMat = new BABYLON.StandardMaterial("marker", scene)
+boulder.material = boulderMat
+boulderMat.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
+boulderMat.diffuseTexture.uScale = 6;
+boulderMat.diffuseTexture.vScale = 6;
+boulder.position.x = 245;
+boulder.position.y = 2;
+boulder.position.z = 195;
 
 
 
@@ -169,6 +170,17 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   camera.target = m
   engine.hideLoadingUI()
 
+// var checkWater = function(){
+//   if (m.position.x ) {
+//     game.endGame()
+//   }
+// }
+
+  var checkWater = function(){
+    if (m.position.y === 1){
+      game.endGame()
+    }
+  }
 
 
   var checkpointReached = function(){
@@ -427,6 +439,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
 
   // things to update before each render
   scene.registerBeforeRender(function(){
+    checkWater()
     checkpointReached()
     checkLaps()
     game.checkForTime()
@@ -437,6 +450,17 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
     timeBillboard.position.x = checkpoint.position.x
     timeBillboard.position.z = checkpoint.position.z
     timeBillboard.position.y = 30
+
+
+    var waterray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, water.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
+    var waterworldInverse = new BABYLON.Matrix();
+    water.getWorldMatrix().invertToRef(waterworldInverse);
+    waterray = BABYLON.Ray.Transform(waterray, waterworldInverse);
+    var waterpickInfo = water.intersects(waterray);
+    if (waterpickInfo.hit) {
+      m.position.y = waterpickInfo.pickedPoint.y + 1;
+    }
+
 
     // Ray constructor takes 3 params (origin, direction, and length)
     // origin is type vector
