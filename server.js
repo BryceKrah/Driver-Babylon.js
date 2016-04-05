@@ -5,11 +5,11 @@ var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req,res){
-  res.sendFile('/Users/Bryce/dev/Driver-Babylon.js/views/index.html')
+  res.sendFile('./views/index.html')
 })
 
 app.get('/level_one', function(req,res){
-  res.sendFile('/Users/Bryce/dev/Driver-Babylon.js/views/level_one.html')
+  res.sendFile('./views/level_one.html')
 })
 
 
