@@ -2,29 +2,67 @@ window.onload = function(){
   console.log("script linked");
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
+  var pauseButton = document.getElementById('pause')
+  var laps = document.getElementById('laps')
+  var highscore = document.getElementById('timescore')
+  var time = 7
 
   var game = {
     score: 0,
-    checkpointNumber: 0
+    checkpointNumber: 0,
+    lapsCompleted: 0,
+    pause: false,
+    isOver: false,
+    checkForTime: function(){
+      if (time < 0.5){
+        this.endGame()
+        this.isOver = true
+      }
+    },
+    endGame: function(){
+      highscore.innerHTML = "Game Over! Your score is: " + Math.round(time);
+      this.isOver = true
+    }
+
   };
 
+
+var checkLaps = function(){
+  if (game.score === 25){
+    game.lapsCompleted = 1
+  }
+  if (game.score === 49) {
+    game.lapsCompleted = 2
+  }
+  if (game.score === 74) {
+    game.lapsCompleted = 3;
+    game.endGame();
+    game.isOver = true;
+  }
+  laps.innerHTML = "Laps Completed: " + game.lapsCompleted + "/3";
+}
+
+  pauseButton.addEventListener('click', function(){
+    game.pause = !game.pause;
+    console.log(game.pause);
+  })
 
 
 
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
-  var camera = new BABYLON.ArcRotateCamera("cam1", -1.5, 1.8479, -35, new BABYLON.Vector3(0,1,0), scene);
+  var camera = new BABYLON.ArcRotateCamera("cam1", -1.5, 1.7179, -40, new BABYLON.Vector3(0,1,0), scene);
     // camera.applyGravity = true;
+
+    // free camera for looking around entire area, not attached to mesh
+    // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+    // // This targets the camera to scene origin
+    // // This attaches the camera to the canvas
+    // camera.attachControl(canvas, true);
     // camera.checkCollisions = true;
 
-  // free camera for looking around entire area, not attached to mesh
-  // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-  // // This targets the camera to scene origin
-  // camera.setTarget(BABYLON.Vector3.Zero());
-  // // This attaches the camera to the canvas
-  // camera.attachControl(canvas, true);
-
   engine.displayLoadingUI();
+  // scene.enablePhysics();
 
   var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
@@ -39,35 +77,57 @@ var createScene = function() {
   skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
   skybox.material = skyboxMaterial;
 
-
-var grass = BABYLON.Mesh.CreateGround("grass", 2000,2000, 0, scene, false);
-var grassMaterial = new BABYLON.StandardMaterial("grassMat", scene);
-grassMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/water.jpg", scene);
-grassMaterial.diffuseTexture.uScale = 25;
-grassMaterial.diffuseTexture.vScale = 25;
-grass.material = grassMaterial;
-
+  var water = BABYLON.Mesh.CreateGround("water", 2000,2000, 0, scene, false);
+  var waterMaterial = new BABYLON.StandardMaterial("waterMat", scene);
+  waterMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/water.jpg", scene);
+  waterMaterial.diffuseTexture.uScale = 25;
+  waterMaterial.diffuseTexture.vScale = 25;
+  water.material = waterMaterial;
 
 
-var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, 10.09, 68, scene, false);
-var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
-groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
-groundMaterial.diffuseTexture.uScale = 6;
-groundMaterial.diffuseTexture.vScale = 6;
-groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-ground.position.y = -10.05;
-ground.material = groundMaterial;
+
+  var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "../texture_imgs/hm.png", 800, 800, 500, 10.09, 68, scene, false);
+  var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+  groundMaterial.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
+  groundMaterial.diffuseTexture.uScale = 6;
+  groundMaterial.diffuseTexture.vScale = 6;
+  groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+  ground.position.y = -10.05;
+  ground.material = groundMaterial;
+  ground.checkCollisions = true;
+
 ////////////////////////////////////////////
 /// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
 /// reference for using math.cos and math.sin
 
 
-
-var marker = BABYLON.Mesh.CreateBox("marker", 7.0, scene);
+var marker = BABYLON.Mesh.CreateBox("marker", 10.0, scene);
+marker.material = new BABYLON.StandardMaterial("markeerr", scene)
 marker.position.x = 245;
 marker.position.y = 10;
 marker.position.z = 195;
 
+
+
+var timeBillboard = BABYLON.Mesh.CreatePlane("timeBillboard", 85, scene, false);
+timeBillboard.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
+timeBillboard.material = new BABYLON.StandardMaterial("timeBillboard", scene);
+timeBillboard.position = new BABYLON.Vector3(-25, 65, 25);
+timeBillboard.scaling.y = 0.3;
+timeBillboard.scaling.x = 0.7;
+
+var timeBillboardTexture = new BABYLON.DynamicTexture("dynamic texture", 512, scene, true);
+timeBillboard.material.diffuseTexture = timeBillboardTexture;
+timeBillboard.material.specularColor = new BABYLON.Color3(0, 0, 0);
+timeBillboard.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+timeBillboard.material.backFaceCulling = false;
+
+timeBillboardTexture.drawText("Time Remaining", null, 145, "bold 44px verdana", "white", "#000000");
+var context2D = timeBillboardTexture.getContext();
+var updateTimeText = function(data) {
+  context2D.clearRect(0, 200, 512, 512);
+  timeBillboardTexture.drawText(data, null, 380, "140px verdana", "white", null);
+}
 
 
 var checkpoint = BABYLON.Mesh.CreateBox("checkpoint", 2.0, scene);
@@ -100,9 +160,7 @@ particleSystem.maxEmitPower = 50;
 particleSystem.updateSpeed = 0.005;
 particleSystem.start();
 
-
 // imports car mesh from .babylon file, created in Blender
-// takes 5 params
 BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
   var m = mesh[0];
   console.log(m);
@@ -112,12 +170,14 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   engine.hideLoadingUI()
 
 
+
   var checkpointReached = function(){
     if (BABYLON.Vector3.Distance(m.position, particleSystem.emitter.position) < 20) {
 
       switch (game.checkpointNumber) {
 
         case 0:
+        time += 2
         checkpoint.position.x = 267;
         checkpoint.position.y = 0;
         checkpoint.position.z = -5;
@@ -126,6 +186,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 1:
+        time += 2
         checkpoint.position.x = 267;
         checkpoint.position.y = 0;
         checkpoint.position.z = -5;
@@ -134,6 +195,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 2:
+        time += 2
         checkpoint.rotation.y = 1
         checkpoint.position.x = 125;
         checkpoint.position.y = 0;
@@ -143,6 +205,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 3:
+        time += 2
         checkpoint.rotation.y = 2
         checkpoint.position.x = -87;
         checkpoint.position.y = 0;
@@ -152,6 +215,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 4:
+        time += 2
         checkpoint.position.x = -323;
         checkpoint.position.y = 0;
         checkpoint.position.z = -110;
@@ -161,6 +225,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 5:
+        time += 2
         checkpoint.rotation.y = 3
         checkpoint.position.x = -321;
         checkpoint.position.y = 0;
@@ -180,6 +245,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 7:
+        time += 2
         checkpoint.rotation.y = 5
         checkpoint.position.x = -79;
         checkpoint.position.y = 0;
@@ -190,6 +256,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 8:
+        time += 2
         checkpoint.rotation.y = 5
         checkpoint.position.x = 112;
         checkpoint.position.y = 0;
@@ -200,6 +267,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 9:
+        time += 2
         checkpoint.position.x = 270;
         checkpoint.position.y = 0;
         checkpoint.position.z = 231;
@@ -210,6 +278,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
 
         case 10:
         // NEEDS ROTATION
+        time += 2
         checkpoint.position.x = 289;
         checkpoint.position.y = 0;
         checkpoint.position.z = 85;
@@ -219,6 +288,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 11:
+        time += 2
         checkpoint.position.x = 138;
         checkpoint.position.y = 0;
         checkpoint.position.z = -111;
@@ -228,6 +298,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 12:
+        time += 2
         checkpoint.position.x = 25;
         checkpoint.position.y = 0;
         checkpoint.position.z = -274;
@@ -237,6 +308,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 13:
+        time += 2
         checkpoint.position.x = 129;
         checkpoint.position.y = 0;
         checkpoint.position.z = -328;
@@ -246,6 +318,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 14:
+        time += 2
         checkpoint.position.x = 298;
         checkpoint.position.y = 0;
         checkpoint.position.z = -321;
@@ -255,6 +328,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 15:
+        time += 2
         checkpoint.position.x = 321;
         checkpoint.position.y = 0;
         checkpoint.position.z = -119;
@@ -264,6 +338,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 16:
+        time += 2
         checkpoint.position.x = 100;
         checkpoint.position.y = 0;
         checkpoint.position.z = -120;
@@ -273,6 +348,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 17:
+        time += 2
         checkpoint.position.x = 12;
         checkpoint.position.y = 0;
         checkpoint.position.z = -224;
@@ -282,6 +358,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 18:
+        time += 2
         checkpoint.position.x = -186;
         checkpoint.position.y = 0;
         checkpoint.position.z = -230;
@@ -291,6 +368,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 19:
+        time += 2
         checkpoint.position.x = -301;
         checkpoint.position.y = 0;
         checkpoint.position.z = -146;
@@ -300,6 +378,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 20:
+        time += 2
         checkpoint.position.x = -343;
         checkpoint.position.y = 0;
         checkpoint.position.z = 63;
@@ -309,6 +388,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 21:
+        time += 2
         checkpoint.position.x = -290;
         checkpoint.position.y = 0;
         checkpoint.position.z = 250;
@@ -319,6 +399,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 22:
+        time += 2
         checkpoint.position.x = -87;
         checkpoint.position.y = 0;
         checkpoint.position.z = 345;
@@ -328,6 +409,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         break;
 
         case 23:
+        time += 2
         checkpoint.position.x = 161;
         checkpoint.position.y = 0;
         checkpoint.position.z = 318;
@@ -343,10 +425,18 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
     }
   }
 
-
   // things to update before each render
   scene.registerBeforeRender(function(){
     checkpointReached()
+    checkLaps()
+    game.checkForTime()
+    // var bb = time=time+(1/BABYLON.Tools.GetFps())
+    var updatedTime = Math.round(time -= 0.02)
+
+    updateTimeText(updatedTime)
+    timeBillboard.position.x = checkpoint.position.x
+    timeBillboard.position.z = checkpoint.position.z
+    timeBillboard.position.y = 30
 
     // Ray constructor takes 3 params (origin, direction, and length)
     // origin is type vector
@@ -376,9 +466,9 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
     if (accelerate){
       m.position.z -= Math.cos(m.rotation.y) * 2.2;
       m.position.x -= Math.sin(m.rotation.y) * 2.2;
+      // console.log(speed);
     }
-
-    if (breaking) {
+    if (reverse) {
       m.position.z += Math.cos(m.rotation.y);
       m.position.x += Math.sin(m.rotation.y);
     }
@@ -400,10 +490,11 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
 })
 
 // keys
+var speed = 0;
 var left = false;
 var right = false;
 var accelerate = false;
-var breaking = false;
+var reverse = false;
 
 // left arrow = 37
 // up arrow = 38
@@ -414,6 +505,7 @@ window.addEventListener("keydown", function(event){
   if (!scene){
     return;
   }
+
   if (event.keyCode === 37) {
     left = true;
     right = false;
@@ -424,11 +516,11 @@ window.addEventListener("keydown", function(event){
   }
   if (event.keyCode === 38) {
     accelerate = true;
-    breaking = false;
+    reverse = false;
   }
   if (event.keyCode === 40) {
     accelerate = false;
-    breaking = true;
+    reverse = true;
   }
 }); // end of keydown event listener
 
@@ -439,7 +531,7 @@ window.addEventListener("keyup", function(event){
   }
   if (event.keyCode == 38 || event.keyCode === 40){
       accelerate = false;
-      breaking = false;
+      reverse = false;
   }
 
 })
@@ -453,8 +545,13 @@ var scene = createScene();
 
 // run the render loop
 engine.runRenderLoop(function () {
-  scene.render();
+  if (!game.pause && game.isOver === false) {
+    scene.render()
+  } else {
+    return
+  }
 });
+
 //the canvas/window resize event handler
 window.addEventListener('resize', function(){
   engine.resize();
