@@ -3,6 +3,7 @@ window.onload = function(){
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
   var pauseButton = document.getElementById('pause')
+  var restartButton = document.getElementById('restart')
   var laps = document.getElementById('laps')
   var highscore = document.getElementById('timescore')
   var time = 7
@@ -45,6 +46,9 @@ var checkLaps = function(){
   pauseButton.addEventListener('click', function(){
     game.pause = !game.pause;
     console.log(game.pause);
+  })
+  restartButton.addEventListener('click', function(){
+    window.location.reload()
   })
 
 
@@ -170,11 +174,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   camera.target = m
   engine.hideLoadingUI()
 
-// var checkWater = function(){
-//   if (m.position.x ) {
-//     game.endGame()
-//   }
-// }
 
   var checkWater = function(){
     if (m.position.y === 1){
