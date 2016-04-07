@@ -11,12 +11,12 @@ userRoutes.route('/')
     res.json( {data: 'yooo'} )
   })
   .post(db.createUser, function(req,res){
-    res.json({data: 'you signed someone up'} );
+    res.redirect('/');
   })
 
 userRoutes.post('/login', db.loginUser, function(req,res){
   var token = jwt.sign(res.rows, secret);
-  res.json( {agent: res.rows, token: token} );
+  res.redirect('/')
 })
 
 module.exports = userRoutes;

@@ -2,8 +2,6 @@ var bcrypt = require('bcrypt');
 var salt = bcrypt.genSaltSync(10);
 var pgp = require('pg-promise')({});
 
-require('dotenv').config()
-
 var cn = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -58,6 +56,7 @@ function loginUser(req, res, next) {
     })
     .catch(() => {
       console.error('error finding users')
+      next()
     })
 }
 

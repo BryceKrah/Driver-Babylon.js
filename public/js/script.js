@@ -6,6 +6,7 @@ window.onload = function(){
   var restartButton = document.getElementById('restart')
   var laps = document.getElementById('laps')
   var highscore = document.getElementById('timescore')
+
   var time = 7
 
   var game = {
@@ -21,8 +22,13 @@ window.onload = function(){
       }
     },
     endGame: function(){
-      highscore.innerHTML = "Game Over! Your score is: " + Math.round(time);
-      this.isOver = true
+      if (this.lapsCompleted !== 3){
+        highscore.innerHTML = "Game Over! You Lose!";
+        this.isOver = true;
+      } else {
+        highscore.innerHTML = "Game Over! Your score is: " + Math.round(time);
+        this.isOver = true
+      }
     }
 
   };
@@ -228,7 +234,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -110;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case4");
         break;
 
         case 5:
@@ -239,7 +244,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 106;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case5");
         break;
 
         case 6:
@@ -248,7 +252,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 283;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case6");
         break;
 
         case 7:
@@ -259,7 +262,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 345;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case7");
         break;
 
         case 8:
@@ -270,7 +272,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 326;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case8");
         break;
 
         case 9:
@@ -280,7 +281,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 231;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case9");
         break;
 
         case 10:
@@ -291,7 +291,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 85;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case10");
         break;
 
         case 11:
@@ -301,7 +300,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -111;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case11");
         break;
 
         case 12:
@@ -311,7 +309,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -274;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case12");
         break;
 
         case 13:
@@ -321,7 +318,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -328;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case13");
         break;
 
         case 14:
@@ -331,7 +327,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -321;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case14");
         break;
 
         case 15:
@@ -341,7 +336,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -119;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case15");
         break;
 
         case 16:
@@ -351,7 +345,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -120;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case16");
         break;
 
         case 17:
@@ -361,7 +354,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -224;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case17");
         break;
 
         case 18:
@@ -371,7 +363,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -230;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case18");
         break;
 
         case 19:
@@ -381,7 +372,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = -146;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case19");
         break;
 
         case 20:
@@ -391,7 +381,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 63;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case20");
         break;
 
         case 21:
@@ -401,8 +390,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 250;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case21");
-        console.log("score: ",game.score);
         break;
 
         case 22:
@@ -412,7 +399,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 345;
         game.score += 1;
         game.checkpointNumber += 1;
-        console.log("case22");
         break;
 
         case 23:
@@ -422,7 +408,6 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
         checkpoint.position.z = 318;
         game.score += 1
         game.checkpointNumber = 0;
-        console.log("case23");
         break;
 
         default:
