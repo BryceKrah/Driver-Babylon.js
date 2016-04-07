@@ -98,10 +98,6 @@ var createScene = function() {
   ground.material = groundMaterial;
   ground.checkCollisions = true;
 
-////////////////////////////////////////////
-/// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
-/// reference for using math.cos and math.sin
-
 var boulder = BABYLON.Mesh.CreateSphere("sphere1", 16, 14, scene);
 var boulderMat = new BABYLON.StandardMaterial("marker", scene)
 boulder.material = boulderMat
@@ -486,10 +482,15 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
       m.position.y = pickInfo.pickedPoint.y + 1;
     }
 
+
+    ////////////////////////////////////////////
+    /// http://www.html5gamedevs.com/topic/2264-move-forward-and-rotation/
+    /// reference for using math.cos and math.sin
+    ////////////////////////////////////////////
+
     if (accelerate){
       m.position.z -= Math.cos(m.rotation.y) * 2.2;
       m.position.x -= Math.sin(m.rotation.y) * 2.2;
-      // console.log(speed);
     }
     if (reverse) {
       m.position.z += Math.cos(m.rotation.y);
@@ -500,14 +501,12 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
       scene.activeCamera.alpha += 0.02;
-      // pans camera to stay behind car while turning
     }
     if (right) {
       m.rotation.y += 0.02;
       m.position.z -= Math.cos(m.rotation.y);
       m.position.x -= Math.sin(m.rotation.y);
       scene.activeCamera.alpha -= 0.02;
-      // pans camera to stay behind car while turning
     }
   })
 })

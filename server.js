@@ -13,6 +13,10 @@ app.get('/level_one', function(req,res){
   res.sendFile(path.join(__dirname, '/views', 'level_one.html'))
 })
 
+app.get('/level_two', function(req,res){
+  res.sendFile(path.join(__dirname, '/views', 'level_two.html'))
+})
+
 
 var port = process.env.PORT || 3000;
 var server = app.listen(port, function(){

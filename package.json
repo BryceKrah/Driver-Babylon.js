@@ -17,7 +17,14 @@
   },
   "homepage": "https://github.com/BryceKrah/Driver-Babylon.js#readme",
   "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.15.0",
+    "dotenv": "^2.0.0",
     "express": "^4.13.4",
-    "path": "^0.12.7"
+    "express-jwt": "^3.3.0",
+    "jsonwebtoken": "^5.7.0",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
+    "pg-promise": "^3.5.5"
   }
 }
