@@ -1,3 +1,5 @@
+var cn = `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@localhost/${process.env.DB_NAME}`
+
 var express = require('express');
 var morgan = require('morgan');
 var expressJwt = require('express-jwt');
@@ -14,13 +16,7 @@ require('dotenv').config()
 if(process.env.ENVIRONMENT === 'production'){
   var cn = process.env.DATABASE_URL;
 } else {
-  var cn = {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS
-}
+  var cn = `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@localhost/${process.env.DB_NAME}`
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
