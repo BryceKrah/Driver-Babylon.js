@@ -11,6 +11,16 @@ var userRoutes = require(path.join(__dirname, '/routes/userRoutes.js'));
 
 require('dotenv').config()
 
+if(process.env.ENVIRONMENT === 'production'){
+  var cn = process.env.DATABASE_URL;
+} else {
+  var cn = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
