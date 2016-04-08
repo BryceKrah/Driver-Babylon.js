@@ -16,7 +16,13 @@ require('dotenv').config()
 if(process.env.ENVIRONMENT === 'production'){
   var cn = process.env.DATABASE_URL;
 } else {
-  var cn = `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@localhost/${process.env.DB_NAME}`
+  var cn = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
+  };
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
