@@ -11,8 +11,9 @@
 </head>
 <body>
 
-  <canvas id="renderCanvas"></canvas>
 
+  <canvas id="renderCanvas"></canvas>
+  <div id="gameOverMessage"></div>
   <div class="container">
     <nav>
     <form action="/" method="GET">
@@ -22,8 +23,18 @@
       <button id="restart">Restart</button>
     </nav>
     <div id="laps"></div>
-    <div id="timescore"></div>
   </div>
+
+<div id="box">
+  <div id="lossMessage"></div>
+  <div id="prompt"></div>
+  <form id="scoreForm" action="/level_one" method="post">
+
+    <input id="score" name="score" type="hidden">
+  </form>
+</div>
+
+
 
 </body>
 </html>

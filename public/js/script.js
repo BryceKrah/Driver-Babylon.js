@@ -5,7 +5,13 @@ window.onload = function(){
   var pauseButton = document.getElementById('pause')
   var restartButton = document.getElementById('restart')
   var laps = document.getElementById('laps')
-  var highscore = document.getElementById('timescore')
+  var gameOverMessage = document.getElementById('gameOverMessage')
+  var inputName = document.createElement('input')
+  var scoreForm = document.getElementById('scoreForm');
+  var highScore = document.getElementById('score')
+  var promptText = document.getElementById('prompt');
+  var lossMessage = document.getElementById('lossMessage');
+
 
   var time = 7
 
@@ -18,18 +24,25 @@ window.onload = function(){
     checkForTime: function(){
       if (time < 0.5){
         this.endGame()
+        lossMessage.innerHTML = "You Ran Out Of Time!"
         this.isOver = true
       }
     },
     endGame: function(){
-      if (this.lapsCompleted !== 3){
-        highscore.innerHTML = "Game Over! You Lose!";
+      if (this.lapsCompleted === 3) {
+        canvas.style.height = '20%'
+        gameOverMessage.innerHTML = "Game Over! Your score is: " + Math.round(time);
+        promptText.innerHTML = "Enter Your Name To Submit Your Score"
+        inputName.setAttribute("name", "name")
+        inputName.setAttribute("maxlength", 3)
+        highScore.setAttribute("value", Math.round(time))
+        scoreForm.appendChild(inputName);
         this.isOver = true;
-        alert("Game Over! You Lose!")
-      } else {
-        highscore.innerHTML = "Game Over! Your score is: " + Math.round(time);
-        this.isOver = true
-        alert("Game Over! Nice Job!")
+      }
+      if (this.lapsCompleted !== 3){
+        gameOverMessage.innerHTML = "Game Over! You Lose!";
+        this.isOver = true;
+        canvas.style.height = '20%'
       }
     }
 
@@ -46,7 +59,6 @@ var checkLaps = function(){
   if (game.score === 74) {
     game.lapsCompleted = 3;
     game.endGame();
-    game.isOver = true;
   }
   laps.innerHTML = "Laps Completed: " + game.lapsCompleted + "/3";
 }
@@ -182,6 +194,7 @@ BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function 
   var checkWater = function(){
     if (m.position.y === 1){
       game.endGame()
+      lossMessage.innerHTML = "Stay out of the Water!"
     }
   }
 

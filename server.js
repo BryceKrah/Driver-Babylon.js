@@ -17,14 +17,19 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use('/users', userRoutes);
-
 app.get('/', function(req,res){
   res.sendFile(path.join(__dirname, '/views', 'index.html'))
 })
 
+app.get('/scores', db.getScores, function(res,res){
+  res.send(res.scores)
+})
+
 app.get('/level_one', function(req,res){
   res.sendFile(path.join(__dirname, '/views', 'level_one.html'))
+})
+app.post('/level_one', db.addHighScore, function(req,res){
+  res.send(res.score)
 })
 
 app.get('/level_two', function(req,res){

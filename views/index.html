@@ -5,6 +5,7 @@
   <title>Driver-Babylon</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="assets/babylon.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
   <script src="../js/auth.js"></script>
   <!-- <script src="js/script.js"></script> -->
 </head>
@@ -17,19 +18,7 @@
     <button id="home">Play</button>
   </form>
 
-  <form action="/users" method="post">
-    <input type="text" name="name" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button>Sign Up</button>
-  </form>
-
-  <form id="logInForm">
-    <input type="text" name="name" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button id="login">Log In</button>
-  </form>
-
-  <div>All Time High Score: 46</div>
+<div class="scoreList"></div>
 
 
 </body>
