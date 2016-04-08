@@ -25,9 +25,11 @@ window.onload = function(){
       if (this.lapsCompleted !== 3){
         highscore.innerHTML = "Game Over! You Lose!";
         this.isOver = true;
+        alert("Game Over! You Lose!")
       } else {
         highscore.innerHTML = "Game Over! Your score is: " + Math.round(time);
         this.isOver = true
+        alert("Game Over! Nice Job!")
       }
     }
 
