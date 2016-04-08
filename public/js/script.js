@@ -16,7 +16,7 @@ window.onload = function(){
   var time = 7
 
   var game = {
-    score: 72,
+    score: 0,
     checkpointNumber: 0,
     lapsCompleted: 0,
     pause: false,
