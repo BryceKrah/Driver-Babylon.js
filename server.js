@@ -21,6 +21,7 @@ if(process.env.ENVIRONMENT === 'production'){
     user: process.env.DB_USER,
     password: process.env.DB_PASS
 }
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
