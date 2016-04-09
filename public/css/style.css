@@ -6,6 +6,34 @@ html, body {
     padding : 0;
     background-color: black;
     color: white;
+    font-family: 'Russo One', sans-serif;
+    letter-spacing: 1.5px;
+}
+
+.flexbox1 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-flow: column;
+  padding-right: 20px;
+}
+
+.flexbox {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 20px;
+  margin-right: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.picture {
+  background-image: url("http://4.bp.blogspot.com/-Q70oWvcKNXQ/Vod7ISLNOrI/AAAAAAAAB2U/qQP4zilrVwo/s320/Keyboard-Arrow-Keys-Navigation-In-Blogger.png");
+  background-position: center;
+  background-size: cover;
+  height: 200px;
+  width: 275px;
 }
 
 #renderCanvas {
@@ -14,8 +42,8 @@ html, body {
     touch-action: auto;
 }
 
-.homepage {
-  color: white;
+#title {
+  
 }
 
 button {
@@ -32,24 +60,28 @@ nav {
 .container {
   display: flex;
   justify-content: space-around;
-  margin: 4px;
   font-size: 20px;
+}
+
+.scoreList {
+  flex-grow: 2;
+  font-size: 30px;
 }
 
 .score-container {
   display: flex;
   justify-content: center;
-  margin: 4px;
-  padding: 5px;
   font-size: 20px;
 }
 .name {
   padding-right: 10px;
   padding-left: 5px;
+  font-size: 30px;
 }
 .score  {
   padding-right: 5px;
   padding-left: 10px;
+  font-size: 30px;
 }
 #gameOverMessage {
   font-size: 35px;

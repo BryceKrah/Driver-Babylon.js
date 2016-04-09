@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Driver-Babylon</title>
-  <link rel="stylesheet" href="css/style.css">
+<link href='https://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>  <link rel="stylesheet" href="css/style.css">
   <script src="assets/babylon.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
   <script src="../js/auth.js"></script>
@@ -11,19 +11,34 @@
 </head>
 <body>
 
+<div class="flexbox">
+    <h1 id="title">Driver</h1>
+</div>
 
-  <h1 class="homepage">Driver</h1>
 
-  <form action="/level_one" method="GET">
-    <button id="home">Play</button>
+<div class="flexbox">
+
+  <div class="flexbox1">
+    <div>Complete the course before the time runs out.</div>
+    <div>Each successful checkpoint reached adds time.</div>
+    <div>Use the directional buttons to control movement.</div>
+    <div class="picture"></div>
+  </div>
+
+  <form class="two" action="/level_one" method="GET">
+    <div>Click the image to start the game!</div>
+    <input type="image" class="picture" src="../msc_img/screenshot.png" alt="">
   </form>
 
+  <div class="scoreList">
+    <div class="flexbox">
+    <div>All Time High Scores:</div>
+    </div>
+  </div>
 
-<div>Complete the course before the time runs out. Each successful checkpoint reached adds time. Use the directional buttons on your keyboard to control movement.</div>
-
-<div class="scoreList">
-  <div>All Time High Scores:</div>
 </div>
+
+
 
 </body>
 </html>

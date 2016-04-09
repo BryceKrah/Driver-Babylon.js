@@ -13,7 +13,7 @@ window.onload = function(){
   var lossMessage = document.getElementById('lossMessage');
 
 
-  var time = 7
+  var time = 7;
 
   var game = {
     score: 0,
