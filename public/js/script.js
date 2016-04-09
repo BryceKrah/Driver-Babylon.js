@@ -71,21 +71,11 @@ var checkLaps = function(){
     window.location.reload()
   })
 
-
-
 var createScene = function() {
   var scene = new BABYLON.Scene(engine);
   var camera = new BABYLON.ArcRotateCamera("cam1", -1.5, 1.7179, -40, new BABYLON.Vector3(0,1,0), scene);
-
-    // free camera for looking around entire area, not attached to mesh
-    // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    // // This targets the camera to scene origin
-    // // This attaches the camera to the canvas
-    // camera.attachControl(canvas, true);
-    // camera.checkCollisions = true;
-
+  // shows loading screen
   engine.displayLoadingUI();
-  // scene.enablePhysics();
 
   var light = new BABYLON.PointLight("light1", new BABYLON.Vector3(-100,150,10), scene);
 
@@ -116,371 +106,355 @@ var createScene = function() {
   groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
   ground.position.y = -10.05;
   ground.material = groundMaterial;
-  ground.checkCollisions = true;
-
-var boulder = BABYLON.Mesh.CreateSphere("sphere1", 16, 14, scene);
-var boulderMat = new BABYLON.StandardMaterial("marker", scene)
-boulder.material = boulderMat
-boulderMat.diffuseTexture = new BABYLON.Texture("../texture_imgs/dirt_two.jpg", scene);
-boulderMat.diffuseTexture.uScale = 6;
-boulderMat.diffuseTexture.vScale = 6;
-boulder.position.x = 245;
-boulder.position.y = 2;
-boulder.position.z = 195;
 
 
 
-var timeBillboard = BABYLON.Mesh.CreatePlane("timeBillboard", 85, scene, false);
-timeBillboard.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
-timeBillboard.material = new BABYLON.StandardMaterial("timeBillboard", scene);
-timeBillboard.position = new BABYLON.Vector3(-25, 65, 25);
-timeBillboard.scaling.y = 0.3;
-timeBillboard.scaling.x = 0.7;
+  var timeBillboard = BABYLON.Mesh.CreatePlane("timeBillboard", 85, scene, false);
+  timeBillboard.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
+  timeBillboard.material = new BABYLON.StandardMaterial("timeBillboard", scene);
+  timeBillboard.position = new BABYLON.Vector3(-25, 65, 25);
+  timeBillboard.scaling.y = 0.3;
+  timeBillboard.scaling.x = 0.7;
 
-var timeBillboardTexture = new BABYLON.DynamicTexture("dynamic texture", 512, scene, true);
-timeBillboard.material.diffuseTexture = timeBillboardTexture;
-timeBillboard.material.specularColor = new BABYLON.Color3(0, 0, 0);
-timeBillboard.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
-timeBillboard.material.backFaceCulling = false;
+  var timeBillboardTexture = new BABYLON.DynamicTexture("dynamic texture", 512, scene, true);
+  timeBillboard.material.diffuseTexture = timeBillboardTexture;
+  timeBillboard.material.specularColor = new BABYLON.Color3(0, 0, 0);
+  timeBillboard.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+  timeBillboard.material.backFaceCulling = false;
 
-timeBillboardTexture.drawText("Time Remaining", null, 145, "bold 44px verdana", "white", "#000000");
-var context2D = timeBillboardTexture.getContext();
-var updateTimeText = function(data) {
-  context2D.clearRect(0, 200, 512, 512);
-  timeBillboardTexture.drawText(data, null, 380, "140px verdana", "white", null);
-}
-
-
-var checkpoint = BABYLON.Mesh.CreateBox("checkpoint", 2.0, scene);
-checkpoint.position.x = 200;
-checkpoint.position.y = 0;
-checkpoint.position.z = 200;
-var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
-particleSystem.particleTexture = new BABYLON.Texture("../texture_imgs/Flare.png", scene);
-particleSystem.emitter = checkpoint;
-particleSystem.minEmitBox = new BABYLON.Vector3(-30, 0, 0); // Starting all from
-particleSystem.maxEmitBox = new BABYLON.Vector3(30, 0, 0); // To...
-// Size of each particle (random between...
-particleSystem.minSize = 0.3;
-particleSystem.maxSize = 1.5;
-
-// Life time of each particle (random between...
-particleSystem.minLifeTime = 0.8;
-particleSystem.maxLifeTime = 2.5;
-
-// Emission rate
-particleSystem.emitRate = 1500;
-
-// Angular speed, in radians
-particleSystem.minAngularSpeed = 0;
-particleSystem.maxAngularSpeed = Math.PI;
-
-// Speed
-particleSystem.minEmitPower = 20;
-particleSystem.maxEmitPower = 50;
-particleSystem.updateSpeed = 0.005;
-particleSystem.start();
-
-// imports car mesh from .babylon file, created in Blender
-BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
-  var m = mesh[0];
-  console.log(m);
-  m.position.x = 190;
-  m.position.z = 350;
-  camera.target = m
-  engine.hideLoadingUI()
-
-
-  var checkWater = function(){
-    if (m.position.y === 1){
-      game.endGame()
-      lossMessage.innerHTML = "Stay out of the Water!"
-    }
+  timeBillboardTexture.drawText("Time Remaining", null, 145, "bold 44px verdana", "white", "#000000");
+  var context2D = timeBillboardTexture.getContext();
+  var updateTimeText = function(data) {
+    context2D.clearRect(0, 200, 512, 512);
+    timeBillboardTexture.drawText(data, null, 380, "140px verdana", "white", null);
   }
 
 
-  var checkpointReached = function(){
-    if (BABYLON.Vector3.Distance(m.position, particleSystem.emitter.position) < 20) {
+  var checkpoint = BABYLON.Mesh.CreateBox("checkpoint", 2.0, scene);
+  checkpoint.position.x = 200;
+  checkpoint.position.y = 0;
+  checkpoint.position.z = 200;
+  var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+  particleSystem.particleTexture = new BABYLON.Texture("../texture_imgs/Flare.png", scene);
+  particleSystem.emitter = checkpoint;
+  particleSystem.minEmitBox = new BABYLON.Vector3(-25, 0, -20); // particles start here
+  particleSystem.maxEmitBox = new BABYLON.Vector3(25, 0, 20); // particles end here
+  // Size of each particle (random between...
+  particleSystem.minSize = 0.3;
+  particleSystem.maxSize = 1.5;
 
-      switch (game.checkpointNumber) {
+  // Life time of each particle (random between 0.8 and 2.5)
+  particleSystem.minLifeTime = 0.8;
+  particleSystem.maxLifeTime = 2.5;
 
-        case 0:
-        time += 2
-        checkpoint.position.x = 267;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -5;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
+  // Emission rate
+  particleSystem.emitRate = 1500;
 
-        case 1:
-        time += 2
-        checkpoint.position.x = 267;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -5;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
+  // Speed of particles
+  particleSystem.minEmitPower = 20;
+  particleSystem.maxEmitPower = 50;
+  particleSystem.updateSpeed = 0.005;
+  particleSystem.start();
 
-        case 2:
-        time += 2
-        checkpoint.rotation.y = 1
-        checkpoint.position.x = 125;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -159;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
+  // imports car mesh from .babylon file, created in Blender
+  BABYLON.SceneLoader.ImportMesh("", "../assets/", "car.babylon", scene, function (mesh) {
+    var m = mesh[0];
+    m.position.x = 190;
+    m.position.z = 350;
+    camera.target = m
+    engine.hideLoadingUI()
 
-        case 3:
-        time += 2
-        checkpoint.rotation.y = 2
-        checkpoint.position.x = -87;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -218;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
 
-        case 4:
-        time += 2
-        checkpoint.position.x = -323;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -110;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 5:
-        time += 2
-        checkpoint.rotation.y = 3
-        checkpoint.position.x = -321;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 106;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 6:
-        checkpoint.position.x = -262;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 283;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 7:
-        time += 2
-        checkpoint.rotation.y = 5
-        checkpoint.position.x = -79;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 345;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 8:
-        time += 2
-        checkpoint.rotation.y = 5
-        checkpoint.position.x = 112;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 326;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 9:
-        time += 2
-        checkpoint.position.x = 270;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 231;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 10:
-        // NEEDS ROTATION
-        time += 2
-        checkpoint.position.x = 289;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 85;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 11:
-        time += 2
-        checkpoint.position.x = 138;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -111;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 12:
-        time += 2
-        checkpoint.position.x = 25;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -274;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 13:
-        time += 2
-        checkpoint.position.x = 129;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -328;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 14:
-        time += 2
-        checkpoint.position.x = 298;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -321;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 15:
-        time += 2
-        checkpoint.position.x = 321;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -119;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 16:
-        time += 2
-        checkpoint.position.x = 100;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -120;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 17:
-        time += 2
-        checkpoint.position.x = 12;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -224;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 18:
-        time += 2
-        checkpoint.position.x = -186;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -230;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 19:
-        time += 2
-        checkpoint.position.x = -301;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = -146;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 20:
-        time += 2
-        checkpoint.position.x = -343;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 63;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 21:
-        time += 2
-        checkpoint.position.x = -290;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 250;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 22:
-        time += 2
-        checkpoint.position.x = -87;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 345;
-        game.score += 1;
-        game.checkpointNumber += 1;
-        break;
-
-        case 23:
-        time += 2
-        checkpoint.position.x = 161;
-        checkpoint.position.y = 0;
-        checkpoint.position.z = 318;
-        game.score += 1
-        game.checkpointNumber = 0;
-        break;
-
-        default:
-        return
-        break;
+    var checkWater = function(){
+      if (m.position.y === 1){
+        game.endGame()
+        lossMessage.innerHTML = "Stay out of the Water!"
       }
     }
-  }
-
-  // things to update before each render
-  scene.registerBeforeRender(function(){
-    checkWater()
-    checkpointReached()
-    checkLaps()
-    game.checkForTime()
-    // var bb = time=time+(1/BABYLON.Tools.GetFps())
-    var updatedTime = Math.round(time -= 0.02)
-
-    updateTimeText(updatedTime)
-    timeBillboard.position.x = checkpoint.position.x
-    timeBillboard.position.z = checkpoint.position.z
-    timeBillboard.position.y = 30
 
 
-    var waterray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, water.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
-    var waterworldInverse = new BABYLON.Matrix();
-    water.getWorldMatrix().invertToRef(waterworldInverse);
-    waterray = BABYLON.Ray.Transform(waterray, waterworldInverse);
-    var waterpickInfo = water.intersects(waterray);
-    if (waterpickInfo.hit) {
-      m.position.y = waterpickInfo.pickedPoint.y + 1;
+    var checkpointReached = function(){
+      if (BABYLON.Vector3.Distance(m.position, particleSystem.emitter.position) < 20) {
+
+        switch (game.checkpointNumber) {
+
+          case 0:
+          time += 2
+          checkpoint.position.x = 267;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -5;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 1:
+          time += 2
+          checkpoint.position.x = 267;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -5;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 2:
+          time += 2
+          checkpoint.rotation.y = 1
+          checkpoint.position.x = 125;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -159;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 3:
+          time += 2
+          checkpoint.rotation.y = 2
+          checkpoint.position.x = -87;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -218;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 4:
+          time += 2
+          checkpoint.position.x = -323;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -110;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 5:
+          time += 2
+          checkpoint.rotation.y = 3
+          checkpoint.position.x = -321;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 106;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 6:
+          checkpoint.position.x = -262;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 283;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 7:
+          time += 2
+          checkpoint.rotation.y = 5
+          checkpoint.position.x = -79;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 345;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 8:
+          time += 2
+          checkpoint.rotation.y = 5
+          checkpoint.position.x = 112;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 326;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 9:
+          time += 2
+          checkpoint.position.x = 270;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 231;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 10:
+          // NEEDS ROTATION
+          time += 2
+          checkpoint.position.x = 289;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 85;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 11:
+          time += 2
+          checkpoint.position.x = 138;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -111;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 12:
+          time += 2
+          checkpoint.position.x = 25;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -274;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 13:
+          time += 2
+          checkpoint.position.x = 129;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -328;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 14:
+          time += 2
+          checkpoint.position.x = 298;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -321;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 15:
+          time += 2
+          checkpoint.position.x = 321;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -119;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 16:
+          time += 2
+          checkpoint.position.x = 100;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -120;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 17:
+          time += 2
+          checkpoint.position.x = 12;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -224;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 18:
+          time += 2
+          checkpoint.position.x = -186;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -230;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 19:
+          time += 2
+          checkpoint.position.x = -301;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = -146;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 20:
+          time += 2
+          checkpoint.position.x = -343;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 63;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 21:
+          time += 2
+          checkpoint.position.x = -290;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 250;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 22:
+          time += 2
+          checkpoint.position.x = -87;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 345;
+          game.score += 1;
+          game.checkpointNumber += 1;
+          break;
+
+          case 23:
+          time += 2
+          checkpoint.position.x = 161;
+          checkpoint.position.y = 0;
+          checkpoint.position.z = 318;
+          game.score += 1
+          game.checkpointNumber = 0;
+          break;
+
+          default:
+          return
+          break;
+        }
+      }
     }
 
+    // things to update before each render
+    scene.registerBeforeRender(function(){
+      checkWater()
+      checkpointReached()
+      checkLaps()
+      game.checkForTime()
+      // var bb = time=time+(1/BABYLON.Tools.GetFps())
+      var updatedTime = Math.round(time -= 0.02)
 
-    // Ray constructor takes 3 params (origin, direction, and length)
-    // origin is type vector
-    // direction is type vector, describes direction of Ray
-    // length is optional param
-    var ray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, ground.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
+      updateTimeText(updatedTime)
+      timeBillboard.position.x = checkpoint.position.x
+      timeBillboard.position.z = checkpoint.position.z
+      timeBillboard.position.y = 30
 
-    // creates a new 4 by 4 matrix
-    var worldInverse = new BABYLON.Matrix();
 
-    // inverts matrix and puts it into another matrix
-    ground.getWorldMatrix().invertToRef(worldInverse);
+      var waterray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, water.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
+      var waterworldInverse = new BABYLON.Matrix();
+      water.getWorldMatrix().invertToRef(waterworldInverse);
+      waterray = BABYLON.Ray.Transform(waterray, waterworldInverse);
+      var waterpickInfo = water.intersects(waterray);
+      if (waterpickInfo.hit) {
+        m.position.y = waterpickInfo.pickedPoint.y + 1;
+      }
 
-    // Ray.Transform takes 2 params (ray, matrix)
-    // the given ray
-    // the given matrix to apply
-    ray = BABYLON.Ray.Transform(ray, worldInverse);
 
-    // setting var for where the ground will intersect with the ray being cast by car
-    var pickInfo = ground.intersects(ray);
+      // Ray constructor takes 3 params (origin, direction, and length)
+      // origin is type vector
+      // direction is type vector, describes direction of Ray
+      // length is optional param
+      var ray = new BABYLON.Ray(new BABYLON.Vector3(m.position.x, ground.getBoundingInfo().boundingBox.maximumWorld.y + 1, m.position.z), new BABYLON.Vector3(0,-1,0)); // direction
 
-    // hit is boolean that returns true if touched
-    if (pickInfo.hit) {
-      m.position.y = pickInfo.pickedPoint.y + 1;
-    }
+      // creates a new 4 by 4 matrix
+      var worldInverse = new BABYLON.Matrix();
+
+      // inverts matrix and puts it into another matrix
+      ground.getWorldMatrix().invertToRef(worldInverse);
+
+      // Ray.Transform takes 2 params (ray, matrix)
+      // the given ray
+      // the given matrix to apply
+      ray = BABYLON.Ray.Transform(ray, worldInverse);
+
+      // setting var for where the ground will intersect with the ray being cast by car
+      var pickInfo = ground.intersects(ray);
+
+      // hit is boolean that returns true if touched
+      if (pickInfo.hit) {
+        m.position.y = pickInfo.pickedPoint.y + 1;
+      }
 
 
     ////////////////////////////////////////////

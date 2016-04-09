@@ -13,11 +13,7 @@ if(process.env.ENVIRONMENT === 'production'){
 var db = pgp(cn);
 
 var addHighScore = (req,res,next)=>{
-  db.any('INSERT INTO scores (name, score) VALUES (${name}, ${score})',
-  {
-    name: req.body.name,
-    score: req.body.score
- })
+  db.none('INSERT INTO scores (name, score) VALUES (${name}, ${score})', req.body)
  .then((data)=> {
    res.score = data[0];
    next();
